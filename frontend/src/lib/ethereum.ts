@@ -62,9 +62,8 @@ export const USDT_ABI = [
     }
 ] as const;
 
-// FiatBridge Contract ABI (based on your deployed Solidity contracts)
+// FiatBridge Contract ABI (based on your Solidity contracts)
 export const FIAT_BRIDGE_ABI = [
-    // Core functions
     {
         "inputs": [
             { "name": "token", "type": "address" },
@@ -80,31 +79,18 @@ export const FIAT_BRIDGE_ABI = [
     },
     {
         "inputs": [
-            { "name": "token", "type": "address" },
-            { "name": "tokenAmount", "type": "uint256" },
-            { "name": "fiatAmount", "type": "uint256" },
-            { "name": "fiatCurrency", "type": "string" },
-            { "name": "transactionId", "type": "string" }
+            { "name": "_requestId", "type": "bytes32" },
+            { "name": "_status", "type": "uint8" },
+            { "name": "_externalReference", "type": "string" }
         ],
-        "name": "initiateOnramp",
-        "outputs": [{ "name": "", "type": "bytes32" }],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "name": "requestId", "type": "bytes32" },
-            { "name": "newStatus", "type": "uint8" },
-            { "name": "externalReference", "type": "string" }
-        ],
-        "name": "processFiatRequest",
+        "name": "updateRequestStatus",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "inputs": [{ "name": "requestId", "type": "bytes32" }],
-        "name": "getRequest",
+        "inputs": [{ "name": "_requestId", "type": "bytes32" }],
+        "name": "getFiatRequest",
         "outputs": [
             { "name": "user", "type": "address" },
             { "name": "token", "type": "address" },
@@ -120,68 +106,14 @@ export const FIAT_BRIDGE_ABI = [
         "stateMutability": "view",
         "type": "function"
     },
-    // Token management
+    // Additional functions  
     {
-        "inputs": [
-            { "name": "token", "type": "address" },
-            { "name": "minAmount", "type": "uint256" },
-            { "name": "maxAmount", "type": "uint256" },
-            { "name": "fee", "type": "uint256" }
-        ],
-        "name": "setSupportedToken",
+        "inputs": [{ "name": "_feeRecipient", "type": "address" }],
+        "name": "setFeeRecipient",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
-    {
-        "inputs": [{ "name": "token", "type": "address" }],
-        "name": "isTokenSupported",
-        "outputs": [{ "name": "", "type": "bool" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{ "name": "token", "type": "address" }],
-        "name": "getTokenConfig",
-        "outputs": [
-            { "name": "isSupported", "type": "bool" },
-            { "name": "minAmount", "type": "uint256" },
-            { "name": "maxAmount", "type": "uint256" },
-            { "name": "fee", "type": "uint256" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    // Liquidity management
-    {
-        "inputs": [
-            { "name": "token", "type": "address" },
-            { "name": "amount", "type": "uint256" }
-        ],
-        "name": "addLiquidity",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{ "name": "token", "type": "address" }],
-        "name": "getAvailableLiquidity",
-        "outputs": [{ "name": "", "type": "uint256" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    // Operator management
-    {
-        "inputs": [
-            { "name": "operator", "type": "address" },
-            { "name": "authorized", "type": "bool" }
-        ],
-        "name": "setOperator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    // View functions
     {
         "inputs": [],
         "name": "feeRecipient",
@@ -191,27 +123,34 @@ export const FIAT_BRIDGE_ABI = [
     },
     {
         "inputs": [],
-        "name": "owner",
+        "name": "feePercentage",
+        "outputs": [{ "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "feeRecipient",
         "outputs": [{ "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "requestCounter",
+        "name": "feePercentage",
         "outputs": [{ "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
     }
 ] as const;
 
-// Contract Addresses (Deployed on Electroneum Testnet)
+// Contract Addresses (Deployed on Morph Blockchain)
 export const ETHEREUM_CONTRACTS = {
-    USDT: process.env.NEXT_PUBLIC_USDT_ADDRESS || '0x18d6fbf54748579B2201025140d69e38fa2278d0' as `0x${string}`,
-    FIAT_BRIDGE: process.env.NEXT_PUBLIC_FIAT_BRIDGE_ADDRESS || '0xDfC297A689ad8525F9528D8510732c6a9061251B' as `0x${string}`,
+    USDT: process.env.NEXT_PUBLIC_USDT_ADDRESS as `0x${string}`,
+    FIAT_BRIDGE: process.env.NEXT_PUBLIC_FIAT_BRIDGE_ADDRESS as `0x${string}`,
 } as const;
 
-// Supported tokens for Electroneum
+// Supported tokens for Ethereum
 export const ETHEREUM_TOKENS = {
     USDT: {
         address: ETHEREUM_CONTRACTS.USDT,
@@ -223,40 +162,24 @@ export const ETHEREUM_TOKENS = {
     // Add more tokens as needed
 } as const;
 
-// Chain configuration for Electroneum
+// Chain configuration for Morph
 export const ETHEREUM_CHAIN_CONFIG = {
-    chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '5201420'), // Default to Electroneum Testnet
+    chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '5201420'), // Default to Morph Holesky
     rpcUrl: process.env.NEXT_PUBLIC_RPC_URL || 'https://rpc.ankr.com/electroneum_testnet',
 } as const;
 
-// Electroneum chain information
-export const ELECTRONEUM_CHAINS = {
-    MAINNET: {
-        id: 52014,
-        name: 'Electroneum',
-        rpcUrl: 'https://rpc.ankr.com/electroneum',
-        explorer: 'https://blockexplorer.electroneum.com',
-    },
-    TESTNET: {
-        id: 5201420,
-        name: 'Electroneum Testnet',
-        rpcUrl: 'https://rpc.ankr.com/electroneum_testnet',
-        explorer: 'https://testnet-blockexplorer.electroneum.com',
-    }
-} as const;
-
-// Morph chain information (keeping for compatibility)
+// Morph chain information
 export const MORPH_CHAINS = {
     MAINNET: {
-        id: 2818,
-        name: 'Morph Mainnet',
-        rpcUrl: 'https://rpc-quicknode.morphl2.io',
-        explorer: 'https://explorer.morphl2.io',
+        id: 52014,
+        name: 'Electroneum Mainnet',
+        rpcUrl: `https://rpc.ankr.com/electroneum/${process.env.ANKR_API_KEY}`,
+        explorer: 'https://blockexplorer.electroneum.com',
     },
     HOLESKY: {
-        id: 2810,
-        name: 'Morph Holesky',
-        rpcUrl: 'https://rpc-quicknode-holesky.morphl2.io',
-        explorer: 'https://explorer-holesky.morphl2.io',
+        id: 5201420,
+        name: 'Electroneum Holesky',
+        rpcUrl: 'https://rpc.ankr.com/electroneum_testnet',
+        explorer: 'https://testnet-blockexplorer.electroneum.com',
     }
 } as const;

@@ -13,6 +13,7 @@
     "@privy-io/react-auth": "^1.99.1",
     "@tanstack/react-query": "^5.83.0",
     "axios": "^1.7.7",
+    "dotenv": "^17.2.1",
     "lucide-react": "^0.453.0",
     "next": "15.3.5",
     "react": "^19.0.0",
