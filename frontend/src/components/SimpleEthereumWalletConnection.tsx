@@ -23,9 +23,9 @@ export default function SimpleEthereumWalletConnection({ }: SimpleEthereumWallet
     const getNetworkName = (chainId?: number) => {
         switch (chainId) {
             case MORPH_CHAINS.MAINNET.id:
-                return 'Morph Mainnet';
+                return 'Electroneum Mainnet';
             case MORPH_CHAINS.HOLESKY.id:
-                return 'Morph Holesky';
+                return 'Electroneum Sepolia';
             case 1:
                 return 'Ethereum Mainnet';
             case 11155111:
